@@ -2,6 +2,7 @@ using DnsClient;
 using Soenneker.DnsClient.Util.Abstract;
 using Soenneker.Utils.AsyncSingleton;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Soenneker.DnsClient.Util;
@@ -24,11 +25,11 @@ public class DnsClientUtil : IDnsClientUtil
         });
     }
 
-    public ValueTask<LookupClient> Get(LookupClientOptions? options = null)
+    public ValueTask<LookupClient> Get(LookupClientOptions? options = null, CancellationToken cancellationToken = default)
     {
         _options = options;
 
-        return _client.Get();
+        return _client.Get(cancellationToken);
     }
 
     public void Dispose()

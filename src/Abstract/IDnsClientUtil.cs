@@ -1,5 +1,6 @@
 using DnsClient;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Soenneker.DnsClient.Util.Abstract;
@@ -9,5 +10,5 @@ namespace Soenneker.DnsClient.Util.Abstract;
 /// </summary>
 public interface IDnsClientUtil: IDisposable, IAsyncDisposable
 {
-    ValueTask<LookupClient> Get(LookupClientOptions? options = null);
+    ValueTask<LookupClient> Get(LookupClientOptions? options = null, CancellationToken cancellationToken = default);
 }
