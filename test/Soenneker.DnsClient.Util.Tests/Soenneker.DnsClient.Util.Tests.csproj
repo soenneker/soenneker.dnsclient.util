@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\Soenneker.DnsClient.Util.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.DnsClient.Util.csproj" />
     </ItemGroup>
 
 </Project>
