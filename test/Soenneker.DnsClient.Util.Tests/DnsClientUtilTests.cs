@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Soenneker.DnsClient.Util.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
-using Xunit.Abstractions;
+
 
 namespace Soenneker.DnsClient.Util.Tests;
 
