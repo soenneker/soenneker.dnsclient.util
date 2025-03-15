@@ -44,6 +44,6 @@
     <ItemGroup>
         <PackageReference Include="DnsClient" Version="1.8.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="3.0.672" />
+        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="3.0.673" />
     </ItemGroup>
 </Project>
