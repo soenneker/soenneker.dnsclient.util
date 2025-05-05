@@ -1,4 +1,4 @@
-# Contributing to Soenneker.DnsClient.Util
+﻿# Contributing to Soenneker.DnsClient.Util
 
 We're excited that you're interested in contributing!
 
