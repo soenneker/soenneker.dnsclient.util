@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Soenneker.DnsClient.Util;
 
 /// <inheritdoc cref="IDnsClientUtil"/>
-public class DnsClientUtil : IDnsClientUtil
+public sealed class DnsClientUtil : IDnsClientUtil
 {
     private readonly AsyncSingleton<LookupClient> _client;
 
@@ -34,13 +34,11 @@ public class DnsClientUtil : IDnsClientUtil
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         _client.Dispose();
     }
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
         return _client.DisposeAsync();
     }
 }
