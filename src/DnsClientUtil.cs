@@ -1,7 +1,6 @@
 using DnsClient;
 using Soenneker.DnsClient.Util.Abstract;
 using Soenneker.Utils.AsyncSingleton;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

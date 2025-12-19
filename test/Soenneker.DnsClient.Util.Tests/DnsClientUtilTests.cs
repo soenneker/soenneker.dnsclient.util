@@ -1,8 +1,6 @@
-using System.Linq;
 using System.Threading.Tasks;
 using DnsClient;
 using AwesomeAssertions;
-using Microsoft.Extensions.Configuration;
 using Soenneker.DnsClient.Util.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
