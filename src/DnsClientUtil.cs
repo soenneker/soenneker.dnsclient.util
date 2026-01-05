@@ -15,13 +15,15 @@ public sealed class DnsClientUtil : IDnsClientUtil
 
     public DnsClientUtil()
     {
-        _client = new AsyncSingleton<LookupClient>(() =>
-        {
-            if (_options == null)
-                return new LookupClient();
+        _client = new AsyncSingleton<LookupClient>(CreateClient);
+    }
 
-            return new LookupClient(_options);
-        });
+    private LookupClient CreateClient()
+    {
+        if (_options == null)
+            return new LookupClient();
+
+        return new LookupClient(_options);
     }
 
     public ValueTask<LookupClient> Get(LookupClientOptions? options = null, CancellationToken cancellationToken = default)
