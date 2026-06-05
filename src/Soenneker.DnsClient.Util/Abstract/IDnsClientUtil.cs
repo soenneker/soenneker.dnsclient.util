@@ -10,5 +10,11 @@ namespace Soenneker.DnsClient.Util.Abstract;
 /// </summary>
 public interface IDnsClientUtil: IDisposable, IAsyncDisposable
 {
+    /// <summary>
+    /// Gets the value.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task containing the result of the operation.</returns>
     ValueTask<LookupClient> Get(LookupClientOptions? options = null, CancellationToken cancellationToken = default);
 }
