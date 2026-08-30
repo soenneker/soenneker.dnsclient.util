@@ -5,40 +5,65 @@
 
 # Soenneker.DnsClient.Util
 
-An async thread-safe singleton for DnsClient.NET.
+Provides a lazily initialized, cached DnsClient.NET `LookupClient` through dependency injection.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.DnsClient.Util
 ```
 
-## Quick start
+## Registration
 
 ```csharp
 using Soenneker.DnsClient.Util.Registrars;
-using Microsoft.Extensions.DependencyInjection;
 
-var services = new ServiceCollection();
-var result = services.AddDnsClientUtilAsSingleton();
+services.AddDnsClientUtilAsSingleton();
 ```
 
-Adds `IDnsClientUtil` as a singleton service.
+Use `AddDnsClientUtilAsScoped()` when each dependency-injection scope should own a separate lookup client and cache.
 
-## What you get
+## Query a record
 
-- `IDnsClientUtil` — An async thread-safe singleton for DnsClient.NET.
-- `DnsClientUtilRegistrar` — An async thread-safe singleton for DnsClient.NET.
+```csharp
+using DnsClient;
+using DnsClient.Protocol;
+using Soenneker.DnsClient.Util.Abstract;
 
-## API at a glance
+public sealed class AddressResolver(IDnsClientUtil dnsClientUtil)
+{
+    public async Task<IReadOnlyList<string>> Resolve(
+        string host,
+        CancellationToken cancellationToken)
+    {
+        LookupClient client = await dnsClientUtil.Get(cancellationToken: cancellationToken);
+        IDnsQueryResponse response = await client.QueryAsync(
+            host,
+            QueryType.A,
+            cancellationToken: cancellationToken);
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `DnsClientUtilRegistrar.AddDnsClientUtilAsSingleton(services)` | Adds `IDnsClientUtil` as a singleton service. | The same service collection, so additional registrations can be chained. |
-| `DnsClientUtilRegistrar.AddDnsClientUtilAsScoped(services)` | Adds `IDnsClientUtil` as a scoped service. | The same service collection, so additional registrations can be chained. |
+        return response.Answers.ARecords()
+                       .Select(record => record.Address.ToString())
+                       .ToArray();
+    }
+}
+```
 
-## Practical notes
+`Get` returns the same `LookupClient` for the utility’s lifetime. The first successful call controls its options; options supplied to later calls are ignored.
 
-- Reuse the registered client instead of constructing one per operation.
-- Calls that return a cached or singleton value reuse the same instance until the owning service is disposed.
-- Dispose instances you own when their scope ends so held resources can be released.
+Configure the client on the first call when system DNS defaults are not appropriate:
+
+```csharp
+var options = new LookupClientOptions
+{
+    UseCache = true,
+    Timeout = TimeSpan.FromSeconds(3),
+    Retries = 2
+};
+
+LookupClient client = await dnsClientUtil.Get(options, cancellationToken);
+```
+
+For singleton registration, initialize it once during startup if multiple callers might otherwise race to provide different settings. DnsClient.NET handles DNS response codes and transport failures; inspect the returned response and allow cancellation or network exceptions to propagate when the caller should decide recovery behavior.
+
+The utility owns the cached client. Do not dispose the returned `LookupClient`; dispose the utility or its dependency-injection scope instead.

@@ -24,4 +24,17 @@ public class DnsClientUtilTests : HostedUnitTest
         IDnsQueryResponse? result = await client.QueryAsync("google.com", QueryType.A);
         result.Should().NotBeNull();
     }
+
+    [Test]
+    public async Task Get_should_reuse_client_initialized_by_first_call()
+    {
+        await using var util = new DnsClientUtil();
+        var options = new LookupClientOptions {UseCache = false};
+
+        LookupClient first = await util.Get(options);
+        LookupClient second = await util.Get(new LookupClientOptions {UseCache = true});
+
+        second.Should().BeSameAs(first);
+        first.Settings.UseCache.Should().BeFalse();
+    }
 }

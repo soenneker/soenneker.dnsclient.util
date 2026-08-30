@@ -5,7 +5,7 @@ using Soenneker.DnsClient.Util.Abstract;
 namespace Soenneker.DnsClient.Util.Registrars;
 
 /// <summary>
-/// An async thread-safe singleton for DnsClient.NET
+/// Registers the cached DNS lookup client utility.
 /// </summary>
 public static class DnsClientUtilRegistrar
 {

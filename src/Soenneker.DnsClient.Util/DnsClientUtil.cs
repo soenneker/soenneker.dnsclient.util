@@ -6,31 +6,26 @@ using System.Threading.Tasks;
 
 namespace Soenneker.DnsClient.Util;
 
-/// <inheritdoc cref="IDnsClientUtil"/>
 public sealed class DnsClientUtil : IDnsClientUtil
 {
-    private readonly AsyncSingleton<LookupClient> _client;
-
-    private LookupClientOptions? _options;
+    private readonly AsyncSingleton<LookupClient, LookupClientOptions?> _client;
 
     public DnsClientUtil()
     {
-        _client = new AsyncSingleton<LookupClient>(CreateClient);
+        _client = new AsyncSingleton<LookupClient, LookupClientOptions?>(CreateClient);
     }
 
-    private LookupClient CreateClient()
+    private static LookupClient CreateClient(LookupClientOptions? options)
     {
-        if (_options == null)
+        if (options == null)
             return new LookupClient();
 
-        return new LookupClient(_options);
+        return new LookupClient(options);
     }
 
     public ValueTask<LookupClient> Get(LookupClientOptions? options = null, CancellationToken cancellationToken = default)
     {
-        _options = options;
-
-        return _client.Get(cancellationToken);
+        return _client.Get(options, cancellationToken);
     }
 
     /// <summary>
