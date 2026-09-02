@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using DnsClient;
 using AwesomeAssertions;
@@ -17,22 +18,22 @@ public class DnsClientUtilTests : HostedUnitTest
     }
 
     [Test]
-    public async Task GetAddress_should_get_address()
+    public async Task GetAddress_should_get_address(CancellationToken cancellationToken)
     {
-        LookupClient client = await _util.Get();
+        LookupClient client = await _util.Get(cancellationToken: cancellationToken);
 
         IDnsQueryResponse? result = await client.QueryAsync("google.com", QueryType.A);
         result.Should().NotBeNull();
     }
 
     [Test]
-    public async Task Get_should_reuse_client_initialized_by_first_call()
+    public async Task Get_should_reuse_client_initialized_by_first_call(CancellationToken cancellationToken)
     {
         await using var util = new DnsClientUtil();
         var options = new LookupClientOptions {UseCache = false};
 
-        LookupClient first = await util.Get(options);
-        LookupClient second = await util.Get(new LookupClientOptions {UseCache = true});
+        LookupClient first = await util.Get(options, cancellationToken: cancellationToken);
+        LookupClient second = await util.Get(new LookupClientOptions {UseCache = true}, cancellationToken: cancellationToken);
 
         second.Should().BeSameAs(first);
         first.Settings.UseCache.Should().BeFalse();
