@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Soenneker.DnsClient.Util;
 
+/// <inheritdoc cref="IDnsClientUtil" />
 public sealed class DnsClientUtil : IDnsClientUtil
 {
     private readonly AsyncSingleton<LookupClient, LookupClientOptions?> _client;
