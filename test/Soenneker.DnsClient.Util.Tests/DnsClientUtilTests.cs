@@ -18,7 +18,7 @@ public class DnsClientUtilTests : HostedUnitTest
     }
 
     [Test]
-    public async Task GetAddress_should_get_address(CancellationToken cancellationToken)
+    public async ValueTask GetAddress_should_get_address(CancellationToken cancellationToken)
     {
         LookupClient client = await _util.Get(cancellationToken: cancellationToken);
 
@@ -27,7 +27,7 @@ public class DnsClientUtilTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Get_should_reuse_client_initialized_by_first_call(CancellationToken cancellationToken)
+    public async ValueTask Get_should_reuse_client_initialized_by_first_call(CancellationToken cancellationToken)
     {
         await using var util = new DnsClientUtil();
         var options = new LookupClientOptions {UseCache = false};
