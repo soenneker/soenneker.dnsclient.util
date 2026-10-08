@@ -22,7 +22,7 @@ public class DnsClientUtilTests : HostedUnitTest
     {
         LookupClient client = await _util.Get(cancellationToken: cancellationToken);
 
-        IDnsQueryResponse? result = await client.QueryAsync("google.com", QueryType.A);
+        IDnsQueryResponse? result = await client.QueryAsync("google.com", QueryType.A, cancellationToken: cancellationToken);
         result.Should().NotBeNull();
     }
 
